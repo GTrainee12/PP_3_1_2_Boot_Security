@@ -1,8 +1,6 @@
 package ru.kata.spring.boot_security.demo.entity;
 
 import javax.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 
 import java.util.HashSet;
@@ -10,8 +8,7 @@ import java.util.Set;
 
 @Entity
 @Table(name = "roles")
-@NoArgsConstructor
-@AllArgsConstructor
+
 public class Role implements GrantedAuthority {
 
 
@@ -24,7 +21,6 @@ public class Role implements GrantedAuthority {
     @Transient
     @ManyToMany(mappedBy = "roles")
     private Set<User> users = new HashSet<>();
-
 
     public Set<User> getUsers() {
         return users;
@@ -59,6 +55,15 @@ public class Role implements GrantedAuthority {
     @Override
     public String getAuthority() {
         return role;
+    }
+
+    public Role(Long id, String role, Set<User> users) {
+        this.id = id;
+        this.role = role;
+        this.users = users;
+    }
+    public Role() {
+
     }
 }
 

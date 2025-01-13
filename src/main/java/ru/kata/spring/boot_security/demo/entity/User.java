@@ -1,23 +1,22 @@
 package ru.kata.spring.boot_security.demo.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
 import lombok.NonNull;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
 import java.util.Collection;
-import java.util.List;
 import java.util.Set;
 
-@AllArgsConstructor
-@NoArgsConstructor
+
 @Entity
 public class User implements UserDetails {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     private Long id;
+
 
     @Column(unique=true, nullable=false, name = "email")
     private String email;
@@ -34,11 +33,26 @@ public class User implements UserDetails {
     @Column(name = "age")
     private int age;
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    @Fetch(FetchMode.JOIN)
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "user_roles",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<Role> role;
+
+    public User() {
+
+    }
+    public User(Long id, String email, @NonNull String password, String firstName, String lastName, int age, Set<Role> role) {
+        this.id = id;
+        this.email = email;
+        this.password = password;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.age = age;
+        this.role = role;
+    }
+
 
     public Set<Role> getRole() {
         return role;
